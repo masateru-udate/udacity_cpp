@@ -28,7 +28,7 @@ void Process::Ram(int pid) {
   int ram_mb;
   string ram_string;
   ram_string = LinuxParser::Ram(pid);
-  ram_mb = std::stof(ram_string) / 1000;
+  ram_mb = (ram_string != "") ? (std::stof(ram_string) / 1000) : 0;
   ram_ = std::to_string(ram_mb);
 }
 
@@ -36,7 +36,7 @@ string Process::User() { return user_; }
 void Process::User(int pid) {
   string user_name, uid;
   uid = LinuxParser::Uid(pid);
-  user_ = LinuxParser::User(std::stoi(uid));
+  user_ = LinuxParser::User((uid != "") ? (std::stoi(uid)) : 0);
 }
 
 long int Process::UpTime() { return uptime_; }

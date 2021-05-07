@@ -5,7 +5,6 @@
 
 #include "linux_parser.h"
 
-using std::stof;
 using std::string;
 using std::to_string;
 using std::vector;
@@ -57,7 +56,7 @@ vector<int> LinuxParser::Pids() {
       // Is every character of the name a digit?
       string filename(file->d_name);
       if (std::all_of(filename.begin(), filename.end(), isdigit)) {
-        int pid = stoi(filename);
+        int pid = (filename != "") ? stoi(filename) : 0;
         pids.push_back(pid);
       }
     }
@@ -75,9 +74,9 @@ float LinuxParser::MemoryUtilization() {
       std::istringstream linestream(line);
       linestream >> key >> value >> value_unit;
       if (key == "MemTotal:") {
-        MemTotal = std::stof(value);
+        MemTotal = (value != "") ? std::stof(value) : 0;
       } else if (key == "MemFree:") {
-        MemFree = std::stof(value);
+        MemFree = (value != "") ? std::stof(value) : 0;
       }
     }
   }
@@ -94,7 +93,7 @@ long LinuxParser::UpTime() {
     std::istringstream linestream(line);
     linestream >> uptime >> idletime;
   }
-  return std::stol(uptime);
+  return (uptime != "") ? std::stol(uptime) : 0;
 }
 
 // TODO: Read and return CPU utilization
@@ -108,15 +107,15 @@ float LinuxParser::ProcessCpuUtilization(int pid) {
     int value_num = 1;
     while (linestream >> value) {
       if (value_num == 14) {
-        utime = std::stof(value);
+        utime = (value != "") ? std::stof(value) : 0;
       } else if (value_num == 15) {
-        stime = std::stof(value);
+        stime = (value != "") ? std::stof(value) : 0;
       } else if (value_num == 16) {
-        cutime = std::stof(value);
+        cutime = (value != "") ? std::stof(value) : 0;
       } else if (value_num == 17) {
-        cstime = std::stof(value);
+        cstime = (value != "") ? std::stof(value) : 0;
       } else if (value_num == 22) {
-        starttime = std::stof(value);
+        starttime = (value != "") ? std::stof(value) : 0;
       }
       value_num++;
     }
@@ -158,7 +157,7 @@ int LinuxParser::TotalProcesses() {
       std::istringstream linestream(line);
       linestream >> key >> value;
       if (key == "processes") {
-        return std::stof(value);
+        return (value != "") ? std::stof(value) : 0;
       }
     }
   }
@@ -173,7 +172,7 @@ int LinuxParser::RunningProcesses() {
       std::istringstream linestream(line);
       linestream >> key >> value;
       if (key == "procs_running") {
-        return std::stof(value);
+        return (value != "") ? std::stof(value) : 0;
       }
     }
   }
@@ -249,7 +248,7 @@ long LinuxParser::UpTime(int pid) {
     int lineN{1};
     while (linestream >> value) {
       if (lineN == 22) {
-        ret_value = std::stol(value);
+        ret_value = (value != "") ? std::stol(value) : 0;
       }
 
       lineN++;

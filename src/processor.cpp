@@ -9,22 +9,21 @@ using std::vector;
 // TODO: Return the aggregate CPU utilization
 float Processor::Utilization() {
   vector<string> cpu_values = LinuxParser::SystemCpuUtilization();
-  setUtilizationValues(cpu_values, 0);
+  setUtilizationValues(cpu_values);
   return calcUtilization();
 }
 
-void Processor::setUtilizationValues(vector<string> cpu_values,
-                                     int cpu_num = 0) {
-  user = stoi(cpu_values[cpu_num * 11 + 1]);
-  nice = stoi(cpu_values[cpu_num * 11 + 2]);
-  system = stoi(cpu_values[cpu_num * 11 + 3]);
-  idle = stoi(cpu_values[cpu_num * 11 + 4]);
-  iowait = stoi(cpu_values[cpu_num * 11 + 5]);
-  irq = stoi(cpu_values[cpu_num * 11 + 6]);
-  softirq = stoi(cpu_values[cpu_num * 11 + 7]);
-  steal = stoi(cpu_values[cpu_num * 11 + 8]);
-  guest = stoi(cpu_values[cpu_num * 11 + 9]);
-  guest_nice = stoi(cpu_values[cpu_num * 11 + 10]);
+void Processor::setUtilizationValues(vector<string> cpu_values) {
+  user = (cpu_values[1] != "") ? stoi(cpu_values[1]) : 0;
+  nice = (cpu_values[2] != "") ? stoi(cpu_values[2]) : 0;
+  system = (cpu_values[3] != "") ? stoi(cpu_values[3]) : 0;
+  idle = (cpu_values[4] != "") ? stoi(cpu_values[4]) : 0;
+  iowait = (cpu_values[5] != "") ? stoi(cpu_values[5]) : 0;
+  irq = (cpu_values[6] != "") ? stoi(cpu_values[6]) : 0;
+  softirq = (cpu_values[7] != "") ? stoi(cpu_values[7]) : 0;
+  steal = (cpu_values[8] != "") ? stoi(cpu_values[8]) : 0;
+  guest = (cpu_values[9] != "") ? stoi(cpu_values[9]) : 0;
+  guest_nice = (cpu_values[10] != "") ? stoi(cpu_values[10]) : 0;
 }
 
 float Processor::calcUtilization() {

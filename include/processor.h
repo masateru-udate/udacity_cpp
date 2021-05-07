@@ -9,7 +9,7 @@ using std::vector;
 class Processor {
  public:
   float Utilization();
-  void setUtilizationValues(vector<string> cpu_values, int cpu_num);
+  void setUtilizationValues(vector<string> cpu_values);
   float calcUtilization();
 
  private:
