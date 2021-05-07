@@ -1,33 +1,47 @@
 #include <unistd.h>
 #include <cctype>
+#include <iostream>
 #include <sstream>
 #include <string>
 #include <vector>
 
+#include "linux_parser.h"
 #include "process.h"
 
 using std::string;
 using std::to_string;
 using std::vector;
 
-// TODO: Return this process's ID
-int Process::Pid() { return 0; }
+int Process::Pid() { return pid_; }
+void Process::Pid(int pid) { pid_ = pid; }
 
-// TODO: Return this process's CPU utilization
-float Process::CpuUtilization() { return 0; }
+float Process::CpuUtilization() { return cpuutilization_; }
+void Process::CpuUtilization(int pid) {
+  cpuutilization_ = LinuxParser::ProcessCpuUtilization(pid);
+}
 
-// TODO: Return the command that generated this process
-string Process::Command() { return string(); }
+string Process::Command() { return command_; }
+void Process::Command(int pid) { command_ = LinuxParser::Command(pid); }
 
-// TODO: Return this process's memory utilization
-string Process::Ram() { return string(); }
+string Process::Ram() { return ram_; }
+void Process::Ram(int pid) {
+  int ram_mb;
+  string ram_string;
+  ram_string = LinuxParser::Ram(pid);
+  ram_mb = std::stof(ram_string) / 1000;
+  ram_ = std::to_string(ram_mb);
+}
 
-// TODO: Return the user (name) that generated this process
-string Process::User() { return string(); }
+string Process::User() { return user_; }
+void Process::User(int pid) {
+  string user_name, uid;
+  uid = LinuxParser::Uid(pid);
+  user_ = LinuxParser::User(std::stoi(uid));
+}
 
-// TODO: Return the age of this process (in seconds)
-long int Process::UpTime() { return 0; }
+long int Process::UpTime() { return uptime_; }
+void Process::UpTime(int pid) { uptime_ = LinuxParser::UpTime(pid); }
 
-// TODO: Overload the "less than" comparison operator for Process objects
-// REMOVE: [[maybe_unused]] once you define the function
-bool Process::operator<(Process const& a[[maybe_unused]]) const { return true; }
+bool Process::operator<(Process const& a) const {
+  return a.cpuutilization_ < cpuutilization_;
+}
